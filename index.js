@@ -1,5 +1,5 @@
 var signals = require('signals');
-var EventUtil = require('browser-events-adder');
+var EventUtil = require('browser-event-adder');
 var resizeManager = require('input-resize');
 
 var x, y, lastX, lastY, relX, relY, downX, downY, windowHalfX, windowHalfY, isDown;
