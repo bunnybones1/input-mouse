@@ -1,0 +1,33 @@
+{
+  "name": "input-mouse",
+  "version": "1.0.0",
+  "description": "Convenience API for mouse inputs using signals.",
+  "main": "index.js",
+  "license": "MIT",
+  "author": {
+    "name": "Tomasz Dysinski",
+    "email": "oz@bunnybones.com",
+    "url": "https://github.com/bunnybones1"
+  },
+  "dependencies": {
+    "browser-event-adder": "^1.0.0",
+    "input-resize": "^1.0.1",
+    "signals": "^1.0.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "node test.js"
+  },
+  "keywords": [
+    "mouse,",
+    "signals"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/bunnybones1/input-mouse.git"
+  },
+  "homepage": "https://github.com/bunnybones1/input-mouse",
+  "bugs": {
+    "url": "https://github.com/bunnybones1/input-mouse/issues"
+  }
+}
