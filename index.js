@@ -97,8 +97,6 @@ EventUtil.addEvent(document, 'mouseup', onDocumentMouseUp );
 EventUtil.addEvent(document, 'mouseout', onDocumentMouseOut );
 
 var Mouse = function() {
-	relX,
-	relY,
 	EventUtil.addEvent(window, 'resize', onDocumentResize);
 	onDocumentResize();
 };
@@ -110,7 +108,6 @@ Mouse.prototype = {
 	onDragRelativeSignal : onDragRelativeSignal,
 	onHoverSignal : onHoverSignal,
 	onHoverRelativeSignal : onHoverRelativeSignal,
-	onDragSignal : onDragSignal,
 	onDownSignal : onDownSignal,
 	onUpSignal : onUpSignal,
 	onClickSignal : onClickSignal,
