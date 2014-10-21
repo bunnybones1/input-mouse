@@ -1,8 +1,7 @@
 var signals = require('signals');
 var EventUtil = require('browser-event-adder');
-var resizeManager = require('input-resize');
 
-var x, y, lastX, lastY, relX, relY, downX, downY, windowHalfX, windowHalfY, isDown;
+var x, y, lastX, lastY, relX, relY, downX, downY, isDown;
 
 //for convenience, move has 3 modes:
 //drag when mouse is down
@@ -21,27 +20,17 @@ var onOutSignal = new signals.Signal();
 
 var start = true;
 var clickDistanceThreshPixels = 5;
-var clickDistanceThreshScreen = 0.1;
-var compensateAspectRatio = 1;
-
-function recalculateClickDistanceThresh(width, height) {
-	clickDistanceThreshScreen = clickDistanceThreshPixels / width * .5;
-	compensateAspectRatio = height / width;
-};
-resizeManager.onResize.add(recalculateClickDistanceThresh);
-recalculateClickDistanceThresh(window.innerWidth, window.innerHeight)
-
+var clickDistanceThreshPixelsSquared = clickDistanceThreshPixels * clickDistanceThreshPixels;
 
 function testMovedSinceDown() {
 	var deltaX = downX - x;
 	var deltaY = downY - y;
-	deltaY /= compensateAspectRatio;
-	return ((deltaX * deltaX + deltaY * deltaY) > clickDistanceThreshScreen);
+	return ((deltaX * deltaX + deltaY * deltaY) > clickDistanceThreshPixelsSquared);
 }
 
 function onDocumentMouseMove( event ) {
-	x = ( event.clientX - windowHalfX ) / windowHalfX;
-	y = ( event.clientY - windowHalfY ) / windowHalfY;
+	x = event.clientX;
+	y = event.clientY;
 	
 	onMoveSignal.dispatch(x, y);
 	if(isDown) {
@@ -86,19 +75,12 @@ function onDocumentMouseOut( event ) {
 	onOutSignal.dispatch();
 };
 
-function onDocumentResize( event ) {
-	windowHalfX = window.innerWidth * .5;
-	windowHalfY = window.innerHeight * .5;
-};
-
 EventUtil.addEvent(document, 'mousemove', onDocumentMouseMove );
 EventUtil.addEvent(document, 'mousedown', onDocumentMouseDown );
 EventUtil.addEvent(document, 'mouseup', onDocumentMouseUp );
 EventUtil.addEvent(document, 'mouseout', onDocumentMouseOut );
 
 var Mouse = function() {
-	EventUtil.addEvent(window, 'resize', onDocumentResize);
-	onDocumentResize();
 };
 
 Mouse.prototype = {
