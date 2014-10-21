@@ -1,6 +1,6 @@
 {
   "name": "input-mouse",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "Convenience API for mouse inputs using signals.",
   "main": "index.js",
   "license": "MIT",
