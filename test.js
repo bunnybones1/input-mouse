@@ -1,22 +1,10 @@
 var Mouse = require('./');
-var labelPos = document.createTextNode("pos");
-var labelPosDiv = document.createElement("div");
-labelPosDiv.appendChild(labelPos);
-var labelPosRel = document.createTextNode("rel pos");
-var labelPosRelDiv = document.createElement("div");
-labelPosRelDiv.appendChild(labelPosRel);
-var labelStatus = document.createTextNode("status");
-var labelStatusDiv = document.createElement("div");
-labelStatusDiv.appendChild(labelStatus);
-document.body.appendChild(labelPosDiv);
-document.body.appendChild(labelPosRelDiv);
-document.body.appendChild(labelStatusDiv);
+var QuickText = require('dom-quick-text');
 
-function status(what) {
-	console.log(what);
-	labelStatus.replaceWholeText(what);
+var labelPos = new QuickText("pos");
+var labelPosRel = new QuickText("rel pos");
+var labelStatus = new QuickText("status");
 
-}
 // Mouse.onMoveSignal.add(function(x, y) {
 
 // };
@@ -24,28 +12,28 @@ function status(what) {
 
 // };
 Mouse.onDragSignal.add(function(x, y) {
-	labelPos.replaceWholeText('pos ' + x + ' ' + y);
-	status('drag');
+	labelPos.update('pos ' + x + ' ' + y);
+	labelStatus.update('drag');
 });
 Mouse.onDragRelativeSignal.add(function(x, y) {
-	labelPosRel.replaceWholeText('pos relative ' + x + ' ' + y);
+	labelPosRel.update('pos relative ' + x + ' ' + y);
 });
 Mouse.onHoverSignal.add(function(x, y) {
-	labelPos.replaceWholeText('pos ' + x + ' ' + y);
-	status('hover');
+	labelPos.update('pos ' + x + ' ' + y);
+	labelStatus.update('hover');
 });
 Mouse.onHoverRelativeSignal.add(function(x, y) {
-	labelPosRel.replaceWholeText('pos relative ' + x + ' ' + y);
+	labelPosRel.update('pos relative ' + x + ' ' + y);
 });
 Mouse.onDownSignal.add(function(x, y) {
-	status('down');
+	labelStatus.update('down');
 });
 Mouse.onUpSignal.add(function(x, y) {
-	status('up');
+	labelStatus.update('up');
 });
 Mouse.onClickSignal.add(function(x, y) {
-	status('click');
+	labelStatus.update('click');
 });
 Mouse.onOutSignal.add(function(x, y) {
-	status('out');
+	labelStatus.update('out');
 });

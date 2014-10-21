@@ -13,7 +13,9 @@
     "browser-event-adder": "^1.0.0",
     "signals": "^1.0.0"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "dom-quick-text": "^1.0.0"
+  },
   "scripts": {
     "test": "beefy test.js --live --open"
   },
