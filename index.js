@@ -1,8 +1,12 @@
 var signals = require('signals');
 var EventUtil = require('browser-event-adder');
 
-var Mouse = function(targetElement) {
 
+var Mouse = function(targetElement, offsetRelativeToTarget) {
+
+	this.targetElement = targetElement;
+	this.isTargetDocument = targetElement === document;
+	this.offsetRelativeToTarget = offsetRelativeToTarget === undefined ? true : offsetRelativeToTarget;	//default true
 	this.x = 0;
 	this.y = 0;
 	this.lastX = 0;
@@ -51,8 +55,11 @@ Mouse.prototype = {
 	},
 
 	onMouseMove: function( event ) {
-		this.x = event.offsetX;
-		this.y = event.offsetY;
+		console.log('?', event.offsetX);
+		this.computeCustomOffset(event);
+		console.log('?', event.offsetX);
+		this.x = event.offsetX2;
+		this.y = event.offsetY2;
 		
 		this.onMoveSignal.dispatch(this.x, this.y);
 		if(this.isDown) {
@@ -96,6 +103,37 @@ Mouse.prototype = {
 		this.isDown = false;
 		this.onOutSignal.dispatch();
 	},
+
+	computeCustomOffset: function(event) {
+		if(this.offsetRelativeToTarget) {
+			if(this.isTargetDocument) {
+				var target = event.target;
+				var offsetLeft = target.offsetLeft;
+				var offsetTop = target.offsetTop;
+				while(target.offsetParent) {
+					target = target.offsetParent;
+					offsetLeft += target.offsetLeft;
+					offsetTop += target.offsetTop;
+				}
+				event.offsetX2 = event.offsetX + offsetLeft;
+				event.offsetY2 = event.offsetY + offsetTop;
+			} else {
+				var target = event.target;
+				var offsetLeft = 0;
+				var offsetTop = 0;
+				while(target !== this.targetElement) {
+					offsetLeft += target.offsetLeft;
+					offsetTop += target.offsetTop;
+					target = target.offsetParent;
+				}
+				event.offsetX2 = event.offsetX + offsetLeft;
+				event.offsetY2 = event.offsetY + offsetTop;
+			}
+		} else {
+			event.offsetX2 = event.clientX;
+			event.offsetY2 = event.clientY;
+		}
+	}
 
 };
 

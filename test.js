@@ -23,6 +23,28 @@ containerDiv.style.width = '50%';
 containerDiv.style.height = '50%';
 
 
+var containerChildDiv = document.createElement('div');
+containerChildDiv.id = 'subContainer';
+containerDiv.appendChild(containerChildDiv);
+containerChildDiv.style.position = 'absolute';
+containerChildDiv.style.left = '25%';
+containerChildDiv.style['background-color'] = '#7fff00';
+containerChildDiv.style.top = '25%';
+containerChildDiv.style.width = '50%';
+containerChildDiv.style.height = '50%';
+
+
+var containerSubChildDiv = document.createElement('div');
+containerSubChildDiv.id = 'subSubContainer';
+containerChildDiv.appendChild(containerSubChildDiv);
+containerSubChildDiv.style.position = 'absolute';
+containerSubChildDiv.style.left = '25%';
+containerSubChildDiv.style['background-color'] = '#ffff00';
+containerSubChildDiv.style.top = '25%';
+containerSubChildDiv.style.width = '50%';
+containerSubChildDiv.style.height = '50%';
+
+
 var mouse1 = listenToElement(document, 'document', labelPos, labelPosRel, labelStatus);
 var mouse2 = listenToElement(containerDiv, 'containerDiv', labelPos2, labelPosRel2, labelStatus2);
 
