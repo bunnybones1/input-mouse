@@ -5,35 +5,62 @@ var labelPos = new QuickText("pos");
 var labelPosRel = new QuickText("rel pos");
 var labelStatus = new QuickText("status");
 
-// Mouse.onMoveSignal.add(function(x, y) {
+var labelPos2 = new QuickText("pos");
+var labelPosRel2 = new QuickText("rel pos");
+var labelStatus2 = new QuickText("status");
 
-// };
-// Mouse.onMoveRelativeSignal.add(function(x, y) {
 
-// };
-Mouse.onDragSignal.add(function(x, y) {
-	labelPos.update('pos ' + x + ' ' + y);
-	labelStatus.update('drag');
-});
-Mouse.onDragRelativeSignal.add(function(x, y) {
-	labelPosRel.update('pos relative ' + x + ' ' + y);
-});
-Mouse.onHoverSignal.add(function(x, y) {
-	labelPos.update('pos ' + x + ' ' + y);
-	labelStatus.update('hover');
-});
-Mouse.onHoverRelativeSignal.add(function(x, y) {
-	labelPosRel.update('pos relative ' + x + ' ' + y);
-});
-Mouse.onDownSignal.add(function(x, y) {
-	labelStatus.update('down');
-});
-Mouse.onUpSignal.add(function(x, y) {
-	labelStatus.update('up');
-});
-Mouse.onClickSignal.add(function(x, y) {
-	labelStatus.update('click');
-});
-Mouse.onOutSignal.add(function(x, y) {
-	labelStatus.update('out');
-});
+
+var containerDiv = document.createElement('div');
+containerDiv.id = 'threejsContainer';
+document.getElementsByTagName('body')[0].appendChild(containerDiv);
+console.log(containerDiv);
+containerDiv.style.position = 'absolute';
+containerDiv.style.left = '25%';
+containerDiv.style['background-color'] = '#00ff00';
+containerDiv.style.top = '25%';
+containerDiv.style.width = '50%';
+containerDiv.style.height = '50%';
+
+
+var mouse1 = listenToElement(document, 'document', labelPos, labelPosRel, labelStatus);
+var mouse2 = listenToElement(containerDiv, 'containerDiv', labelPos2, labelPosRel2, labelStatus2);
+
+function listenToElement(element, name, labelPos, labelPosRel, labelStatus) {
+	var mouse = new Mouse(element);
+	// var mouse2 = new Mouse(document);
+
+	// Mouse.onMoveSignal.add(function(x, y) {
+
+	// };
+	// Mouse.onMoveRelativeSignal.add(function(x, y) {
+
+	// };
+	mouse.onDragSignal.add(function(x, y) {
+		labelPos.update(name + ' pos ' + x + ' ' + y);
+		labelStatus.update(name + ' drag');
+	});
+	mouse.onDragRelativeSignal.add(function(x, y) {
+		labelPosRel.update(name + ' pos relative ' + x + ' ' + y);
+	});
+	mouse.onHoverSignal.add(function(x, y) {
+		labelPos.update(name + ' pos ' + x + ' ' + y);
+		labelStatus.update(name + ' hover');
+	});
+	mouse.onHoverRelativeSignal.add(function(x, y) {
+		labelPosRel.update(name + ' pos relative ' + x + ' ' + y);
+	});
+	mouse.onDownSignal.add(function(x, y) {
+		labelStatus.update(name + ' down');
+	});
+	mouse.onUpSignal.add(function(x, y) {
+		labelStatus.update(name + ' up');
+	});
+	mouse.onClickSignal.add(function(x, y) {
+		labelStatus.update(name + ' click');
+	});
+	mouse.onOutSignal.add(function(x, y) {
+		labelStatus.update(name + ' out');
+	});
+	return mouse;
+};

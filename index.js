@@ -1,99 +1,97 @@
 var signals = require('signals');
 var EventUtil = require('browser-event-adder');
 
-var x, y, lastX, lastY, relX, relY, downX, downY, isDown;
+var Mouse = function(targetElement) {
 
-//for convenience, move has 3 modes:
-//drag when mouse is down
-//hover when mouse is up
-//move for both
-var onMoveSignal = new signals.Signal();
-var onMoveRelativeSignal = new signals.Signal();
-var onDragSignal = new signals.Signal();
-var onDragRelativeSignal = new signals.Signal();
-var onHoverSignal = new signals.Signal();
-var onHoverRelativeSignal = new signals.Signal();
-var onDownSignal = new signals.Signal();
-var onUpSignal = new signals.Signal();
-var onClickSignal = new signals.Signal();
-var onOutSignal = new signals.Signal();
+	this.x = 0;
+	this.y = 0;
+	this.lastX = 0;
+	this.lastY = 0;
+	this.relX = 0;
+	this.relY = 0;
+	this.downX = 0;
+	this.downY = 0;
+	this.isDown = false;
 
-var start = true;
-var clickDistanceThreshPixels = 5;
-var clickDistanceThreshPixelsSquared = clickDistanceThreshPixels * clickDistanceThreshPixels;
+	//for convenience, move has 3 modes:
+	//drag when mouse is down
+	//hover when mouse is up
+	//move for both
+	this.onMoveSignal = new signals.Signal();
+	this.onMoveRelativeSignal = new signals.Signal();
+	this.onDragSignal = new signals.Signal();
+	this.onDragRelativeSignal = new signals.Signal();
+	this.onHoverSignal = new signals.Signal();
+	this.onHoverRelativeSignal = new signals.Signal();
+	this.onDownSignal = new signals.Signal();
+	this.onUpSignal = new signals.Signal();
+	this.onClickSignal = new signals.Signal();
+	this.onOutSignal = new signals.Signal();
 
-function testMovedSinceDown() {
-	var deltaX = downX - x;
-	var deltaY = downY - y;
-	return ((deltaX * deltaX + deltaY * deltaY) > clickDistanceThreshPixelsSquared);
-}
+	this.start = true;
+	this.clickDistanceThreshPixels = 5;
+	this.clickDistanceThreshPixelsSquared = this.clickDistanceThreshPixels * this.clickDistanceThreshPixels;
 
-function onDocumentMouseMove( event ) {
-	x = event.clientX;
-	y = event.clientY;
-	
-	onMoveSignal.dispatch(x, y);
-	if(isDown) {
-		onDragSignal.dispatch(x, y);
-	} else {
-		onHoverSignal.dispatch(x, y);
-	}
-
-	if(start) {
-		start = false;
-	} else {
-		relX = x - lastX;
-		relY = y - lastY;
-		onMoveRelativeSignal.dispatch(relX, relY);
-		if(isDown) {
-			onDragRelativeSignal.dispatch(relX, relY);
-		} else {
-			onHoverRelativeSignal.dispatch(relX, relY);
-		}
-	}
-	lastX = x;
-	lastY = y;
-};
-
-function onDocumentMouseDown( event ) {
-	isDown = true;
-	downX = x;
-	downY = y;
-	onDownSignal.dispatch(x, y);
-};
-
-function onDocumentMouseUp( event ) {
-	if(!testMovedSinceDown()) {
-		onClickSignal.dispatch(x, y);
-	}
-	isDown = false;
-	onUpSignal.dispatch(x, y);
-};
-
-function onDocumentMouseOut( event ) {
-	isDown = false;
-	onOutSignal.dispatch();
-};
-
-EventUtil.addEvent(document, 'mousemove', onDocumentMouseMove );
-EventUtil.addEvent(document, 'mousedown', onDocumentMouseDown );
-EventUtil.addEvent(document, 'mouseup', onDocumentMouseUp );
-EventUtil.addEvent(document, 'mouseout', onDocumentMouseOut );
-
-var Mouse = function() {
+	EventUtil.addEvent(targetElement, 'mousemove', this.onMouseMove.bind(this) );
+	EventUtil.addEvent(targetElement, 'mousedown', this.onMouseDown.bind(this) );
+	EventUtil.addEvent(targetElement, 'mouseup', this.onMouseUp.bind(this) );
+	EventUtil.addEvent(targetElement, 'mouseout', this.onMouseOut.bind(this) );
 };
 
 Mouse.prototype = {
-	onMoveSignal : onMoveSignal,
-	onMoveRelativeSignal : onMoveRelativeSignal,
-	onDragSignal : onDragSignal,
-	onDragRelativeSignal : onDragRelativeSignal,
-	onHoverSignal : onHoverSignal,
-	onHoverRelativeSignal : onHoverRelativeSignal,
-	onDownSignal : onDownSignal,
-	onUpSignal : onUpSignal,
-	onClickSignal : onClickSignal,
-	onOutSignal : onOutSignal
+	testMovedSinceDown: function() {
+		var deltaX = this.downX - this.x;
+		var deltaY = this.downY - this.y;
+		return ((deltaX * deltaX + deltaY * deltaY) > this.clickDistanceThreshPixelsSquared);
+	},
+
+	onMouseMove: function( event ) {
+		this.x = event.offsetX;
+		this.y = event.offsetY;
+		
+		this.onMoveSignal.dispatch(this.x, this.y);
+		if(this.isDown) {
+			this.onDragSignal.dispatch(this.x, this.y);
+		} else {
+			this.onHoverSignal.dispatch(this.x, this.y);
+		}
+
+		if(this.start) {
+			this.start = false;
+		} else {
+			this.relX = this.x - this.lastX;
+			this.relY = this.y - this.lastY;
+			this.onMoveRelativeSignal.dispatch(this.relX, this.relY);
+			if(this.isDown) {
+				this.onDragRelativeSignal.dispatch(this.relX, this.relY);
+			} else {
+				this.onHoverRelativeSignal.dispatch(this.relX, this.relY);
+			}
+		}
+		this.lastX = this.x;
+		this.lastY = this.y;
+	},
+
+	onMouseDown: function( event ) {
+		this.isDown = true;
+		this.downX = this.x;
+		this.downY = this.y;
+		this.onDownSignal.dispatch(this.x, this.y);
+	},
+
+	onMouseUp: function( event ) {
+		if(!this.testMovedSinceDown()) {
+			this.onClickSignal.dispatch(this.x, this.y);
+		}
+		this.isDown = false;
+		this.onUpSignal.dispatch(this.x, this.y);
+	},
+
+	onMouseOut: function( event ) {
+		this.isDown = false;
+		this.onOutSignal.dispatch();
+	},
+
 };
 
-module.exports = new Mouse();
+module.exports = Mouse;
