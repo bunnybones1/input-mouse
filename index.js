@@ -32,10 +32,15 @@ var Mouse = function(targetElement) {
 	this.clickDistanceThreshPixels = 5;
 	this.clickDistanceThreshPixelsSquared = this.clickDistanceThreshPixels * this.clickDistanceThreshPixels;
 
-	EventUtil.addEvent(targetElement, 'mousemove', this.onMouseMove.bind(this) );
-	EventUtil.addEvent(targetElement, 'mousedown', this.onMouseDown.bind(this) );
-	EventUtil.addEvent(targetElement, 'mouseup', this.onMouseUp.bind(this) );
-	EventUtil.addEvent(targetElement, 'mouseout', this.onMouseOut.bind(this) );
+	this.onMouseMove = this.onMouseMove.bind(this);
+	this.onMouseDown = this.onMouseDown.bind(this);
+	this.onMouseUp = this.onMouseUp.bind(this);
+	this.onMouseOut = this.onMouseOut.bind(this);
+
+	EventUtil.addEvent(targetElement, 'mousemove', this.onMouseMove );
+	EventUtil.addEvent(targetElement, 'mousedown', this.onMouseDown );
+	EventUtil.addEvent(targetElement, 'mouseup', this.onMouseUp );
+	EventUtil.addEvent(targetElement, 'mouseout', this.onMouseOut );
 };
 
 Mouse.prototype = {
