@@ -55,9 +55,7 @@ Mouse.prototype = {
 	},
 
 	onMouseMove: function( event ) {
-		console.log('?', event.offsetX);
 		this.computeCustomOffset(event);
-		console.log('?', event.offsetX);
 		this.x = event.offsetX2;
 		this.y = event.offsetY2;
 		
