@@ -14,7 +14,7 @@
     "signals": "^1.0.0"
   },
   "devDependencies": {
-    "dom-quick-text": "^1.0.0"
+    "dom-quick-text": "^1.0.2"
   },
   "scripts": {
     "test": "beefy test.js --live --open"

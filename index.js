@@ -58,6 +58,10 @@ Mouse.prototype = {
 		this.computeCustomOffset(event);
 		this.x = event.offsetX2;
 		this.y = event.offsetY2;
+		if(isNaN(this.x)) {
+			debugger;
+			this.computeCustomOffset(event);
+		}
 		
 		this.onMoveSignal.dispatch(this.x, this.y);
 		if(this.isDown) {
@@ -106,8 +110,15 @@ Mouse.prototype = {
 		if(this.offsetRelativeToTarget) {
 			if(this.isTargetDocument) {
 				var target = event.target;
-				var offsetLeft = target.offsetLeft;
-				var offsetTop = target.offsetTop;
+				var offsetLeft;
+				var offsetTop;
+				if(target !== document) {
+					offsetTop = target.offsetTop;
+					offsetLeft = target.offsetLeft;
+				} else {
+					offsetTop = 0;
+					offsetLeft = 0;
+				}
 				while(target.offsetParent) {
 					target = target.offsetParent;
 					offsetLeft += target.offsetLeft;
@@ -131,8 +142,37 @@ Mouse.prototype = {
 			event.offsetX2 = event.clientX;
 			event.offsetY2 = event.clientY;
 		}
-	}
+	},
 
+	testDown : function(x, y) {
+		this.onMouseDown({
+			target: this.targetElement,
+			offsetX: x,
+			offsetY: y,
+			clientX: x,
+			clientY: y,
+		})
+	},
+
+	testMove : function(x, y) {
+		this.onMouseMove({
+			target: this.targetElement,
+			offsetX: x,
+			offsetY: y,
+			clientX: x,
+			clientY: y,
+		})
+	},
+
+	testUp : function(x, y) {
+		this.onMouseUp({
+			target: this.targetElement,
+			offsetX: x,
+			offsetY: y,
+			clientX: x,
+			clientY: y,
+		})
+	}
 };
 
 module.exports = Mouse;

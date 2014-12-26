@@ -84,5 +84,11 @@ function listenToElement(element, name, labelPos, labelPosRel, labelStatus) {
 	mouse.onOutSignal.add(function(x, y) {
 		labelStatus.update(name + ' out');
 	});
+
+	mouse.testMove(0, 0);
+	mouse.testMove(300, 300);
+	mouse.testDown(300, 300);
+	mouse.testMove(400, 400);
+	mouse.testUp(400, 400);
 	return mouse;
 };
