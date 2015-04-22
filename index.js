@@ -1,11 +1,20 @@
 var signals = require('signals');
 var EventUtil = require('browser-event-adder');
 
+//utility to get { left, top } of an element
+var ROOT = { left: 0, top: 0 }
+function getClientRect(element) {
+    if (element===window
+            ||element===document
+            ||element===document.body)
+        return ROOT
+    else
+        return element.getBoundingClientRect()
+}
 
 var Mouse = function(targetElement, offsetRelativeToTarget) {
 
 	this.targetElement = targetElement;
-	this.isTargetDocument = targetElement === document;
 	this.offsetRelativeToTarget = offsetRelativeToTarget === undefined ? true : offsetRelativeToTarget;	//default true
 	this.x = 0;
 	this.y = 0;
@@ -108,36 +117,9 @@ Mouse.prototype = {
 
 	computeCustomOffset: function(event) {
 		if(this.offsetRelativeToTarget) {
-			if(this.isTargetDocument) {
-				var target = event.target;
-				var offsetLeft;
-				var offsetTop;
-				if(target !== document) {
-					offsetTop = target.offsetTop;
-					offsetLeft = target.offsetLeft;
-				} else {
-					offsetTop = 0;
-					offsetLeft = 0;
-				}
-				while(target.offsetParent) {
-					target = target.offsetParent;
-					offsetLeft += target.offsetLeft;
-					offsetTop += target.offsetTop;
-				}
-				event.offsetX2 = event.offsetX + offsetLeft;
-				event.offsetY2 = event.offsetY + offsetTop;
-			} else {
-				var target = event.target;
-				var offsetLeft = 0;
-				var offsetTop = 0;
-				while(target !== this.targetElement) {
-					offsetLeft += target.offsetLeft;
-					offsetTop += target.offsetTop;
-					target = target.offsetParent;
-				}
-				event.offsetX2 = event.offsetX + offsetLeft;
-				event.offsetY2 = event.offsetY + offsetTop;
-			}
+			var clientRect = getClientRect(event.target);
+			event.offsetX2 = event.clientX - clientRect.left;
+			event.offsetY2 = event.clientY - clientRect.top;
 		} else {
 			event.offsetX2 = event.clientX;
 			event.offsetY2 = event.clientY;
