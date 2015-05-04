@@ -12,7 +12,7 @@ function getClientRect(element) {
         return element.getBoundingClientRect()
 }
 
-var Mouse = function(targetElement, offsetRelativeToTarget) {
+var Mouse = function(targetElement, offsetRelativeToTarget, optionalUpTargetElement) {
 
 	this.targetElement = targetElement;
 	this.offsetRelativeToTarget = offsetRelativeToTarget === undefined ? true : offsetRelativeToTarget;	//default true
@@ -52,7 +52,7 @@ var Mouse = function(targetElement, offsetRelativeToTarget) {
 
 	EventUtil.addEvent(targetElement, 'mousemove', this.onMouseMove );
 	EventUtil.addEvent(targetElement, 'mousedown', this.onMouseDown );
-	EventUtil.addEvent(targetElement, 'mouseup', this.onMouseUp );
+	EventUtil.addEvent(optionalUpTargetElement ? optionalUpTargetElement : targetElement, 'mouseup', this.onMouseUp );
 	EventUtil.addEvent(targetElement, 'mouseout', this.onMouseOut );
 };
 
