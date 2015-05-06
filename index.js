@@ -117,7 +117,7 @@ Mouse.prototype = {
 
 	computeCustomOffset: function(event) {
 		if(this.offsetRelativeToTarget) {
-			var clientRect = getClientRect(event.target);
+			var clientRect = getClientRect(this.targetElement);
 			event.offsetX2 = event.clientX - clientRect.left;
 			event.offsetY2 = event.clientY - clientRect.top;
 		} else {
